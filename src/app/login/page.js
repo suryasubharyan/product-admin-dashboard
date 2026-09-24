@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/authService";
-import { setToken } from "@/lib/auth";
+import { setToken, getToken } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,6 +15,10 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submittingRef = useRef(false);
+
+  useEffect(() => {
+    if (getToken()) router.replace("/products");
+  }, [router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
