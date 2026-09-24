@@ -28,7 +28,7 @@ api.interceptors.response.use(
         if (error.response?.data?.message) {
             message = error.response.data.message;
         } else if (error.code === "ECONNABORTED") {
-            messsage = "Request timed out. Please try again.";
+            message = "Request timed out. Please try again.";
         } else if (!error.response) {
             message = "Network error. Check your internet connection.";
         }
