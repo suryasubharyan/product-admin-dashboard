@@ -35,6 +35,8 @@ api.interceptors.response.use(
 
         if (status === 401 && window.location.pathname !== "/login") {
             clearToken();
+            // Interceptors run outside React, so the router hook is not available here.
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
             window.location.href = "/login";
         }
 

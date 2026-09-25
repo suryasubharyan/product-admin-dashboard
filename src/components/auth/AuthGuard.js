@@ -1,22 +1,25 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { getToken } from "@/lib/auth";
 import Loader from "@/components/ui/Loader";
 
-export default function AuthGuard({ children }){
-    const router = useRouter();
-    const [isAllowed, setIsAllowed] = useState(false);
+// No subscription needed: we only read localStorage once per render.
+const subscribe = () => () => {};
 
-    useEffect(() => {
-        if (getToken()) {
-            setIsAllowed(true);
-        } else {
-            router.replace("/login");
-        }
-    }, [router]);
+export default function AuthGuard({ children }) {
+  const router = useRouter();
 
-    if ( !isAllowed ) return <Loader text="Checking login..." />;
+  // Server snapshot is false/null, so server and client HTML match during hydration.
+  const isClient = useSyncExternalStore(subscribe, () => true, () => false);
+  const token = useSyncExternalStore(subscribe, getToken, () => null);
 
-    return children;
+  useEffect(() => {
+    if (isClient && !token) router.replace("/login");
+  }, [isClient, token, router]);
+
+  if (!token) return <Loader text="Checking login..." />;
+
+  return children;
 }
