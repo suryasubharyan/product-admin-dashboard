@@ -2,8 +2,8 @@
 
 An admin dashboard for managing products, built with **Next.js (App Router)**, **React**, **Tailwind CSS** and **Axios** on top of the [DummyJSON](https://dummyjson.com) API.
 
-- **Live demo:** _add Vercel URL here_
-- **Repository:** _add GitHub URL here_
+- **Live demo:** https://product-admin-dashboard-phi-one.vercel.app/
+- **Repository:** https://github.com/suryasubharyan/product-admin-dashboard
 
 **Demo login:** username `emilys`, password `emilyspass`
 
