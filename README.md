@@ -92,6 +92,11 @@ Every product list request is then sent with `&delay=2000`. Restart the dev serv
 - [x] Empty-state message when nothing matches
 - [x] Error message with a **Retry** button when a request fails
 
+### UI and UX
+- [x] Skeleton loaders, toast notifications for create, edit and delete, and subtle page and list animations
+- [x] Animations respect the operating system's "reduce motion" setting (`motion-safe:`)
+- [x] Keyboard-accessible dialog (Escape to close), focus rings and ARIA labels on icon buttons
+
 ### URL state
 - [x] Page, page size, search, category and sort are stored in the URL, so a refresh or a shared link shows the same result
 - [x] Invalid values such as `?page=abc`, `?limit=999` or `?sortBy=hack` fall back to safe defaults
@@ -148,7 +153,7 @@ DummyJSON returns success for create/update/delete but does not persist anything
 My approach:
 1. Always call the real API first, so the request, validation and error handling are real.
 2. On success, save the change in a small **local change store** in `localStorage` (`src/lib/localProducts.js`).
-3. Whenever products are fetched, merge the local changes on top of the API data: deleted products are hidden, edited products are replaced, and new products appear at the top of page 1 (only if they match the current search or category).
+3. Whenever products are fetched, merge the local changes on top of the API data: deleted products are hidden, edited products are replaced, and new products are shown only if they match the current search or category. Without a sort, new products appear first on page 1. With a sort, each new product appears on the page whose value range it fits into, and every page is re-sorted after merging, so edited prices or titles also land in the right position.
 4. New products get a unique id (`Date.now()`) and an `isLocal` flag. Editing or deleting them skips the API, because they do not exist on the server.
 
 Changes survive refreshes and appear consistently on the list, details and edit pages.
@@ -164,7 +169,7 @@ Login, Save and Delete use two guards: a `useRef` flag that blocks a second call
 ## Known Limitations
 
 - **Client-side auth only.** The token lives in `localStorage`, so routes are protected in the browser, not on the server. In production I would store the token in an `httpOnly` cookie and protect routes with Next.js middleware.
-- **Local changes and server pagination.** New products appear only at the top of page 1. Deleting an item leaves one fewer row on that page. Edited products are not re-sorted by their new values. A real backend would remove these trade-offs.
+- **Local changes and server pagination.** Sorting of local changes is done within the page that is loaded, so an edited product is re-sorted inside its page but does not move to a different page. Deleting an item leaves one fewer row on that page. A real backend would remove these trade-offs.
 - **Images for new products.** New products have no image upload and show a placeholder.
 
 ---

@@ -1,3 +1,5 @@
+import { inputClass } from "@/components/ui/styles";
+
 const SORT_OPTIONS = [
   { value: "", label: "Default order" },
   { value: "price-asc", label: "Price: Low to High" },
@@ -21,7 +23,7 @@ export default function SortSelect({ sortBy, order, onChange }) {
       value={value}
       onChange={handleChange}
       aria-label="Sort products"
-      className="rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800"
+      className={`${inputClass} md:w-56`}
     >
       {SORT_OPTIONS.map((option) => (
         <option key={option.value} value={option.value}>

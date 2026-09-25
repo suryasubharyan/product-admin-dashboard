@@ -10,3 +10,7 @@ export function formatPrice(value) {
 export function formatRating(value) {
     return Number(value ?? 0).toFixed(1);
 }
+
+export function formatCategory(slug) {
+    return (slug ?? "").replace(/-/g, " ");
+}

@@ -1,34 +1,42 @@
 import Link from "next/link";
 import ProductThumb from "./ProductThumb";
 import StockBadge from "./StockBadge";
-import { formatPrice, formatRating } from "@/lib/format";
+import ProductActions from "./ProductActions";
+import { StarIcon } from "@/components/ui/Icons";
+import { formatCategory, formatPrice, formatRating } from "@/lib/format";
 
-export default function ProductCard({ product, onDelete }) {
+export default function ProductCard({ product, onDelete, index = 0 }) {
   return (
-    <div className="flex gap-3 rounded-lg border border-gray-200 bg-white p-3">
+    <div
+      style={{ animationDelay: `${Math.min(index, 12) * 40}ms` }}
+      className="flex gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md motion-safe:animate-fade-in-up"
+    >
       <ProductThumb src={product.thumbnail} alt={product.title} size={80} />
-      <div className="min-w-0 flex-1 space-y-1">
-        <Link
-          href={`/products/${product.id}`}
-          className="block truncate font-medium text-gray-900 hover:text-blue-600"
-        >
-          {product.title}
-        </Link>
-        <p className="text-xs capitalize text-gray-500">{product.category}</p>
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold text-gray-900">{formatPrice(product.price)}</span>
-          <span className="text-gray-600">★ {formatRating(product.rating)}</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <Link
+            href={`/products/${product.id}`}
+            className="line-clamp-2 font-medium text-slate-900 hover:text-emerald-700"
+          >
+            {product.title}
+          </Link>
+          <span className="shrink-0 font-semibold tabular-nums text-slate-900">
+            {formatPrice(product.price)}
+          </span>
         </div>
-        <div className="flex items-center justify-between pt-1">
+
+        <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
+          <span className="capitalize">{formatCategory(product.category)}</span>
+          <span aria-hidden="true">·</span>
+          <span className="inline-flex items-center gap-0.5">
+            <StarIcon className="h-3.5 w-3.5 text-amber-400" />
+            {formatRating(product.rating)}
+          </span>
+        </div>
+
+        <div className="mt-2 flex items-center justify-between">
           <StockBadge stock={product.stock} />
-          <div className="flex gap-3 text-sm">
-            <Link href={`/products/${product.id}/edit`} className="text-blue-600">
-              Edit
-            </Link>
-            <button onClick={() => onDelete(product)} className="text-red-600">
-              Delete
-            </button>
-          </div>
+          <ProductActions product={product} onDelete={onDelete} />
         </div>
       </div>
     </div>

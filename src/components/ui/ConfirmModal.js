@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { TrashIcon } from "./Icons";
+import { dangerButtonClass, secondaryButtonClass } from "./styles";
 
 export default function ConfirmModal({
   open,
@@ -26,7 +28,7 @@ export default function ConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm motion-safe:animate-fade-in"
       onClick={() => !isLoading && onCancel()}
     >
       <div
@@ -34,32 +36,30 @@ export default function ConfirmModal({
         aria-modal="true"
         aria-labelledby="confirm-title"
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow-lg"
+        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl motion-safe:animate-scale-in"
       >
-        <h2 id="confirm-title" className="text-lg font-semibold text-gray-900">
-          {title}
-        </h2>
-        <p className="text-sm text-gray-600">{message}</p>
+        <div className="flex gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600">
+            <TrashIcon className="h-5 w-5" />
+          </div>
+          <div className="space-y-2">
+            <h2 id="confirm-title" className="text-lg font-semibold text-slate-900">
+              {title}
+            </h2>
+            <p className="text-sm text-slate-600">{message}</p>
+            {error && (
+              <p role="alert" className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
+          </div>
+        </div>
 
-        {error && (
-          <p role="alert" className="text-sm text-red-600">
-            {error}
-          </p>
-        )}
-
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={onCancel}
-            disabled={isLoading}
-            className="rounded border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
-          >
+        <div className="mt-6 flex justify-end gap-3">
+          <button onClick={onCancel} disabled={isLoading} className={secondaryButtonClass}>
             Cancel
           </button>
-          <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className="rounded bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
-          >
+          <button onClick={onConfirm} disabled={isLoading} className={dangerButtonClass}>
             {isLoading ? loadingLabel : confirmLabel}
           </button>
         </div>
