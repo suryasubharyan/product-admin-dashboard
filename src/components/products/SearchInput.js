@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import useDebounce from "@/hooks/useDebounce";
 
@@ -30,7 +32,7 @@ export default function SearchInput({ value, onSearch }) {
          onChange={(e) => setText(e.target.value)}
          placeholder="Search products..."
          aria-label="Search products"
-         className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-blue-500 "
+         className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 "
        />
     </div>
    );
