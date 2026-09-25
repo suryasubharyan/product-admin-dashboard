@@ -45,6 +45,32 @@ function matchesQuery(product, query) {
   return true;
 }
 
+function compareBy(field, order) {
+  const direction = order === "desc" ? -1 : 1;
+  return (a, b) => {
+    const x = a[field];
+    const y = b[field];
+    if (typeof x === "string") return x.localeCompare(y) * direction;
+    return (x - y) * direction;
+  };
+}
+
+// Decides whether a locally added product should appear on the current page.
+// Without a sort, new products are shown first on page 1.
+// With a sort, a product is shown on the page whose value range it falls into.
+function belongsOnPage(product, apiProducts, query, isLastPage) {
+  if (!query.sortBy) return query.page === 1;
+  if (apiProducts.length === 0) return isLastPage;
+
+  const compare = compareBy(query.sortBy, query.order);
+  const first = apiProducts[0];
+  const last = apiProducts[apiProducts.length - 1];
+
+  const afterStart = query.page === 1 || compare(product, first) >= 0;
+  const beforeEnd = isLastPage || compare(product, last) <= 0;
+  return afterStart && beforeEnd;
+}
+
 // Merges locally saved add/edit/delete changes into a page of API results.
 export function applyLocalChanges(apiProducts, apiTotal, query) {
   const { products, deletedIds } = readChanges();
@@ -54,10 +80,18 @@ export function applyLocalChanges(apiProducts, apiTotal, query) {
     .map((p) => products[p.id] ?? p);
 
   const removedCount = apiProducts.length - visible.length;
-  const added = Object.values(products).filter((p) => p.isLocal && matchesQuery(p, query));
+  const matching = Object.values(products).filter((p) => p.isLocal && matchesQuery(p, query));
+
+  const isLastPage = query.page * query.limit >= apiTotal;
+  const addedOnPage = matching.filter((p) => belongsOnPage(p, apiProducts, query, isLastPage));
+
+  const pageProducts = [...addedOnPage, ...visible];
+  if (query.sortBy) {
+    pageProducts.sort(compareBy(query.sortBy, query.order));
+  }
 
   return {
-    products: query.page === 1 ? [...added, ...visible] : visible,
-    total: Math.max(0, apiTotal - removedCount + added.length),
+    products: pageProducts,
+    total: Math.max(0, apiTotal - removedCount + matching.length),
   };
 }
