@@ -8,8 +8,8 @@ export default function ProductList({ products, onDelete }) {
         <ProductTable products={products} onDelete={onDelete} />
       </div>
       <div className="grid gap-3 md:hidden">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} onDelete={onDelete} />
+        {products.map((product, index) => (
+          <ProductCard key={product.id} product={product} onDelete={onDelete} index={index} />
         ))}
       </div>
     </>
