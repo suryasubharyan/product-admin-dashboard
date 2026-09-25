@@ -42,4 +42,5 @@ api.interceptors.response.use(
     }
 );
 
+export const isRequestCanceled = (error) => axios.isCancel(error);
 export default api;

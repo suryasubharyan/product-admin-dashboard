@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { usePathname, useRouter, useSearchParamas } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { parseProductQuery, buildProductQueryString } from "@/lib/productQuery";
 
 const RESET_PAGE_KEYS = ["q", "category", "sortBy", "order", "limit"];
 
 export default function useProductQuery() {
-    const searchParams = useSearchParamas();
+    const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
 

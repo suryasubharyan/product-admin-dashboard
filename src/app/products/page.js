@@ -1,3 +1,11 @@
+import { Suspense } from "react";
+import ProductsView from "@/components/products/ProductsView";
+import Loader from "@/components/ui/Loader";
+
 export default function ProductsPage() {
-  return <h1>Products</h1>;
+  return (
+    <Suspense fallback={<Loader />}>
+      <ProductsView />
+    </Suspense>
+  );
 }
