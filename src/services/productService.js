@@ -2,6 +2,9 @@ import api from "@/lib/axios";
 
 const LIST_FIELDS = "title,price,rating,category,thumbnail,stock";
 
+// Optional artificial delay (ms) for testing slow responses and race conditions.
+const API_DELAY = process.env.NEXT_PUBLIC_API_DELAY;
+
 export async function getProducts(query, { signal } = {}) {
     const { page, limit, q, category, sortBy, order } = query;
 
@@ -14,6 +17,10 @@ export async function getProducts(query, { signal } = {}) {
     if (sortBy) {
         params.sortBy = sortBy;
         params.order = order;
+    }
+
+    if (API_DELAY) {
+        params.delay = API_DELAY;
     }
 
     let url = "/products";
