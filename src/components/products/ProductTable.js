@@ -3,7 +3,7 @@ import ProductThumb from "./ProductThumb";
 import StockBadge from "./StockBadge";
 import { formatPrice, formatRating } from "@/lib/format";
 
-export default function ProductTable({ products }) {
+export default function ProductTable({ products, onDelete }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
       <table className="min-w-full text-sm">
@@ -14,6 +14,7 @@ export default function ProductTable({ products }) {
             <th className="px-4 py-3 text-right font-medium">Price</th>
             <th className="px-4 py-3 text-right font-medium">Rating</th>
             <th className="px-4 py-3 text-right font-medium">Stock</th>
+            <th className="px-4 py-3 text-right font-medium">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
@@ -35,6 +36,16 @@ export default function ProductTable({ products }) {
               <td className="px-4 py-3 text-right text-gray-700">★ {formatRating(product.rating)}</td>
               <td className="px-4 py-3 text-right">
                 <StockBadge stock={product.stock} />
+              </td>
+              <td className="px-4 py-3 text-right">
+                <div className="flex justify-end gap-3">
+                  <Link href={`/products/${product.id}/edit`} className="text-blue-600 hover:underline">
+                    Edit
+                  </Link>
+                  <button onClick={() => onDelete(product)} className="text-red-600 hover:underline">
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
